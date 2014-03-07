@@ -71,4 +71,11 @@ You can access:
     obj['some.path'] = {'hello': 'world'}  # will be converted to a DottedDict
     obj['another.path'] = ['hello']  # will be converted to a DottedList
 
+#### Example #5: Shortcuts
+
+    from dotteddict import dot, dot_json
+
+    obj = dot({'hello': 'world'})
+    obj = dot_json('{"hello": "world"}')
+
 That's all!
