@@ -1,8 +1,13 @@
-# DottedDict
+======
+dotted
+======
 
-A Python library that provides a method of accessing lists and dicts with a dotted path notation. It is useful to access a deep path inside a complex object composed of lists and dicts.
+A Python library that provides a method of accessing lists and dicts with a
+dotted path notation. It is useful to access a deep path inside a complex
+object composed of lists and dicts.
 
-## Quick & Dirty:
+Quick & Dirty:
+==============
 
     from dotted.collection import DottedCollection, DottedDict, DottedList
 
@@ -16,11 +21,15 @@ A Python library that provides a method of accessing lists and dicts with a dott
     obj = dot(dict_or_list)
     obj = dot_json(json_value)
 
-`DottedDict` and `DottedList` have the same accessors as `dict` and `list` so you can iterate them as usual. Both type of objects support access via a dotted path key.
+``DottedDict`` and ``DottedList`` have the same accessors as ``dict`` and ``list``
+so you can iterate them as usual. Both type of objects support access via a
+dotted path key.
 
-### Examples
+Examples
+========
 
-#### Example #1: DottedList
+Example #1: DottedList
+----------------------
 
     obj = DottedList([0, 1, 2, 3, [4, 5, 6], 7, 8, [9, 10]])
 
@@ -41,9 +50,11 @@ or:
 
     obj[8] = 11
 
-but the latter only works if `index == len(obj)`. In other case you will get a very pretty exception.
+but the latter only works if ``index == len(obj)``. In other case you will get a
+very pretty exception.
 
-#### Example #2: DottedDict
+Example #2: DottedDict
+----------------------
 
     obj = DottedDict({'hello': {'world': {'wide': 'web'}}})
 
@@ -57,9 +68,12 @@ All of these are true:
     obj.hello.world == {'wide': 'web'}
     obj.hello.world.wide == 'web'
 
-#### Example #3: Both working together
+Example #3: Both working together
+---------------------------------
 
-    obj = DottedCollection.factory({'hello': [{'world': {'wide': ['web', 'web', 'web']}}]})
+    obj = DottedCollection.factory({
+        'hello': [{'world': {'wide': ['web', 'web', 'web']}}]
+    })
 
 You can access:
 
@@ -71,14 +85,16 @@ You can access:
     ...
     obj['hello.0.world.wide.0']
 
-#### Example #4: When new values are dicts or lists
+Example #4: When new values are dicts or lists
+----------------------------------------------
 
     obj = DottedCollection.factory(some_obj)
 
     obj['some.path'] = {'hello': 'world'}  # will be converted to a DottedDict
     obj['another.path'] = ['hello']  # will be converted to a DottedList
 
-#### Example #5: Shortcuts
+Example #5: Shortcuts
+---------------------
 
     from dotted.utils import dot, dot_json
 
