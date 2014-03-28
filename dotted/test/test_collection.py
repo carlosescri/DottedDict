@@ -2,7 +2,7 @@
 import json
 import unittest
 
-from dotteddict import DottedCollection, DottedList, DottedDict
+from dotted.collection import DottedCollection, DottedList, DottedDict
 
 
 class DottedCollectionTests(unittest.TestCase):

@@ -79,3 +79,9 @@ You can access:
     obj = dot_json('{"hello": "world"}')
 
 That's all!
+
+## Tests
+
+Run in the terminal from the parent directory:
+
+    python -m dotted.test.test_collection

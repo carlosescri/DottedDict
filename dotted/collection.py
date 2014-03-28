@@ -306,16 +306,3 @@ class DottedJSONEncoder(json.JSONEncoder):
             return obj.store
         else:
             return json.JSONEncoder.default(obj)
-
-
-#
-# Shortcuts
-#
-
-
-def dot(value):
-    return DottedCollection.factory(value)
-
-
-def dot_json(json_value):
-    return DottedCollection.load_json(json_value)
