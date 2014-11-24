@@ -27,7 +27,12 @@ class DottedCollection(object):
     @classmethod
     def load_json(cls, json_value):
         """Returns a DottedCollection from a JSON string"""
-        return cls.factory(json.loads(json_value))
+        try:
+            value = json.loads(json_value)
+        except ValueError:
+            value = json_value
+
+        return cls.factory(value)
 
     @classmethod
     def _factory_by_index(cls, dotted_key):

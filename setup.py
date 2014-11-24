@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='dotted',
-    version='0.1.0',
+    version='0.1.1',
     author='Carlos Escribano Rey',
     author_email='carlos@nettoys.es',
     url='https://github.com/carlosescri/DottedDict',

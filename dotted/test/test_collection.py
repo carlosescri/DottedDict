@@ -58,6 +58,11 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertIsInstance(obj['test'][2], DottedDict)
         self.assertIsInstance(obj['hello'], unicode)
 
+        json_value = "Hi everybody!"
+        obj = DottedCollection.load_json(json_value)
+        self.assertEqual(repr(obj), "'Hi everybody!'")
+        self.assertIsInstance(obj, basestring)
+
         # DottedCollection._factory_by_index
 
         obj = DottedCollection._factory_by_index(1)
