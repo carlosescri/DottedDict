@@ -1,4 +1,3 @@
-======
 dotted
 ======
 
@@ -8,6 +7,8 @@ object composed of lists and dicts.
 
 Quick & Dirty:
 ==============
+
+.. code-block:: python
 
     from dotted.collection import DottedCollection, DottedDict, DottedList
 
@@ -31,9 +32,13 @@ Examples
 Example #1: DottedList
 ----------------------
 
+.. code-block:: python
+
     obj = DottedList([0, 1, 2, 3, [4, 5, 6], 7, 8, [9, 10]])
 
 All of these are true:
+
+.. code-block:: python
 
     obj[0]     ==  0
     obj['1']   ==  1
@@ -44,9 +49,13 @@ All of these are true:
 
 If you want to append you can do:
 
+.. code-block:: python
+
     obj.append(12)
 
 or:
+
+.. code-block:: python
 
     obj[8] = 11
 
@@ -56,9 +65,13 @@ very pretty exception.
 Example #2: DottedDict
 ----------------------
 
+.. code-block:: python
+
     obj = DottedDict({'hello': {'world': {'wide': 'web'}}})
 
 All of these are true:
+
+.. code-block:: python
 
     obj['hello'] == {'world': {'wide': 'web'}}
     obj['hello.world'] == {'wide': 'web'}
@@ -71,11 +84,15 @@ All of these are true:
 Example #3: Both working together
 ---------------------------------
 
+.. code-block:: python
+
     obj = DottedCollection.factory({
         'hello': [{'world': {'wide': ['web', 'web', 'web']}}]
     })
 
 You can access:
+
+.. code-block:: python
 
     obj['hello'][0]['world']['wide'][0]
     obj.hello[0].world.wide[0]
@@ -88,6 +105,8 @@ You can access:
 Example #4: When new values are dicts or lists
 ----------------------------------------------
 
+.. code-block:: python
+
     obj = DottedCollection.factory(some_obj)
 
     obj['some.path'] = {'hello': 'world'}  # will be converted to a DottedDict
@@ -96,6 +115,8 @@ Example #4: When new values are dicts or lists
 Example #5: Shortcuts
 ---------------------
 
+.. code-block:: python
+
     from dotted.utils import dot, dot_json
 
     obj = dot({'hello': 'world'})
@@ -103,8 +124,11 @@ Example #5: Shortcuts
 
 That's all!
 
-## Tests
+Tests
+=====
 
 Run in the terminal from the parent directory:
+
+.. code-block:: console
 
     python -m dotted.test.test_collection
