@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
+
+from six import string_types, text_type
 import unittest2 as unittest
 
 from dotted.collection import DottedCollection, DottedList, DottedDict
@@ -51,7 +53,7 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertIsInstance(obj[1], int)
         self.assertIsInstance(obj[2], DottedDict)
         self.assertIsInstance(obj[2]['test'], DottedList)
-        self.assertIsInstance(obj[2]['hello'], unicode)  # JSON uses unicode...
+        self.assertIsInstance(obj[2]['hello'], text_type)  # JSON uses unicode...
 
         json_value = '{"test": [1, 2, {}], "hello": "world"}'
         obj = DottedCollection.load_json(json_value)
@@ -61,12 +63,12 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertIsInstance(obj['test'][0], int)
         self.assertIsInstance(obj['test'][1], int)
         self.assertIsInstance(obj['test'][2], DottedDict)
-        self.assertIsInstance(obj['hello'], unicode)
+        self.assertIsInstance(obj['hello'], text_type)
 
         json_value = "Hi everybody!"
         obj = DottedCollection.load_json(json_value)
         self.assertReprsEqual(repr(obj), "'Hi everybody!'")
-        self.assertIsInstance(obj, basestring)
+        self.assertIsInstance(obj, string_types)
 
         # DottedCollection._factory_by_index
 
