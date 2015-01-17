@@ -134,7 +134,7 @@ class DottedCollectionTests(unittest.TestCase):
         obj[1] = 1
 
         # Bad try
-        with self.assertRaisesRegexp(IndexError, 'list assignment index out of range'):
+        with self.assertRaisesRegexp(IndexError, 'list (assignment )?index out of range'):
             obj[3] = 3
 
         # Good!
@@ -143,7 +143,7 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertReprsEqual(repr(obj), '[0, 1, 2]')
 
         # Bad try in nested list
-        with self.assertRaisesRegexp(IndexError, 'list assignment index out of range'):
+        with self.assertRaisesRegexp(IndexError, 'list (assignment )?index out of range'):
             obj['3.1'] = 1
 
         # TODO(@carlosescri): Should it be '[0, 1, 2]'???
@@ -186,7 +186,7 @@ class DottedCollectionTests(unittest.TestCase):
 
         self.assertReprsEqual(repr(obj), '[1, 2, 3]')
 
-        with self.assertRaisesRegexp(IndexError, 'list assignment index out of range'):
+        with self.assertRaisesRegexp(IndexError, 'list (assignment )?index out of range'):
             del obj[3]
 
         python_obj = obj.to_python()
