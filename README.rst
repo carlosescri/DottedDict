@@ -1,6 +1,10 @@
 dotted
 ======
 
+.. image:: https://pypip.in/version/dotted/badge.svg
+    :target: https://pypi.python.org/pypi/dotted/
+    :alt: Latest Version
+
 A Python library that provides a method of accessing lists and dicts with a
 dotted path notation. It is useful to access a deep path inside a complex
 object composed of lists and dicts.
