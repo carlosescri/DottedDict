@@ -9,7 +9,7 @@ setup(
     packages=['dotted', 'dotted.test'],
     license=open('LICENSE').read(),
     description='Access dicts and lists with a dotted path notation.',
-    long_description=open('README.txt').read(),
+    long_description=open('README.rst').read(),
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
