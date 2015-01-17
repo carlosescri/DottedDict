@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-import unittest
+import unittest2 as unittest
 
 from dotted.collection import DottedCollection, DottedList, DottedDict
 
