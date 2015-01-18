@@ -2,14 +2,16 @@
 
 import collections
 import json
+import sys
 
 from abc import ABCMeta, abstractmethod
 
+from six import add_metaclass, string_types as basestring, iteritems
 
+
+@add_metaclass(ABCMeta)
 class DottedCollection(object):
     """Abstract Base Class for DottedDict and DottedDict"""
-
-    __metaclass__ = ABCMeta
 
     @classmethod
     def factory(cls, initial=None):
@@ -62,7 +64,7 @@ class DottedCollection(object):
         if isinstance(self.store, list):
             data = enumerate(self.store)
         else:
-            data = self.store.iteritems()
+            data = iteritems(self.store)
 
         for key, value in data:
             try:
@@ -260,7 +262,7 @@ class DottedDict(DottedCollection, collections.MutableMapping):
         """
         result = dict(self)
 
-        for key, value in result.iteritems():
+        for key, value in iteritems(result):
             if isinstance(value, DottedCollection):
                 result[key] = value.to_python()
 
