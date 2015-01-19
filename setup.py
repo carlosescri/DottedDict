@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='dotted',
@@ -10,6 +10,7 @@ setup(
     license=open('LICENSE').read(),
     description='Access dicts and lists with a dotted path notation.',
     long_description=open('README.rst').read(),
+    install_requires=['six'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
