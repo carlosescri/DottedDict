@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='dotted',
-    version='0.1.1',
+    version='0.1.2',
     author='Carlos Escribano Rey',
     author_email='carlos@nettoys.es',
     url='https://github.com/carlosescri/DottedDict',
@@ -15,7 +15,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python',
         'Topic :: Software Development'
     ]
 )

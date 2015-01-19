@@ -136,3 +136,10 @@ Run in the terminal from the parent directory:
 .. code-block:: console
 
     python -m dotted.test.test_collection
+
+Special Thanks
+==============
+
+- **Marc Abramowitz** (`@msabramo`_)
+
+.. _@msabramo: https://github.com/msabramo
