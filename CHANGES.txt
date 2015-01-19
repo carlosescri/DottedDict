@@ -1,1 +1,2 @@
+v0.1.1, 2014-11-24 -- Fixed error when parsing a non JSON string (value)
 v0.1.0, 2014-03-28 -- Initial release
