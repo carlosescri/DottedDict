@@ -17,13 +17,18 @@ class DottedCollectionTests(unittest.TestCase):
     def test_dottedcollection(self):
         """ DottedCollection Tests """
 
-        with self.assertRaisesRegexp(TypeError, "Can't instantiate abstract class DottedCollection with abstract methods __delitem__, __getitem__, __setitem__, to_python"):
+        with self.assertRaisesRegexp(
+                TypeError,
+                "Can't instantiate abstract class DottedCollection with "
+                "abstract methods __delitem__, __getitem__, __setitem__,"
+                " to_python"):
             obj = DottedCollection()
 
         # DottedCollection.factory
 
         obj = DottedCollection.factory([1, 2, {'hi': 'world', '3': [4, 5, 6]}])
-        self.assertReprsEqual(repr(obj), "[1, 2, {'3': [4, 5, 6], 'hi': 'world'}]")
+        self.assertReprsEqual(repr(obj),
+                              "[1, 2, {'3': [4, 5, 6], 'hi': 'world'}]")
         self.assertIsInstance(obj, DottedCollection)
         self.assertIsInstance(obj, DottedList)
         self.assertIsInstance(obj[2], DottedDict)
@@ -47,17 +52,19 @@ class DottedCollectionTests(unittest.TestCase):
 
         json_value = '[1, 2, {"test": [], "hello": "world"}]'
         obj = DottedCollection.load_json(json_value)
-        self.assertReprsEqual(repr(obj), "[1, 2, {u'test': [], u'hello': u'world'}]")
+        self.assertReprsEqual(repr(obj),
+                              "[1, 2, {u'test': [], u'hello': u'world'}]")
         self.assertIsInstance(obj, DottedList)
         self.assertIsInstance(obj[0], int)
         self.assertIsInstance(obj[1], int)
         self.assertIsInstance(obj[2], DottedDict)
         self.assertIsInstance(obj[2]['test'], DottedList)
-        self.assertIsInstance(obj[2]['hello'], text_type)  # JSON uses unicode...
+        self.assertIsInstance(obj[2]['hello'], text_type)  # JSON uses unicode
 
         json_value = '{"test": [1, 2, {}], "hello": "world"}'
         obj = DottedCollection.load_json(json_value)
-        self.assertReprsEqual(repr(obj), "{u'test': [1, 2, {}], u'hello': u'world'}")
+        self.assertReprsEqual(repr(obj),
+                              "{u'test': [1, 2, {}], u'hello': u'world'}")
         self.assertIsInstance(obj, DottedDict)
         self.assertIsInstance(obj['test'], DottedList)
         self.assertIsInstance(obj['test'][0], int)
@@ -104,20 +111,28 @@ class DottedCollectionTests(unittest.TestCase):
         obj = DottedCollection.factory([])
         self.assertReprsEqual(obj.to_json(), '[]')
 
-        obj = DottedCollection.factory([1, 2, {'a': 'b', 'c': [3, 4, {'5': 6}]}])
-        self.assertReprsEqual(obj.to_json(), '[1, 2, {"a": "b", "c": [3, 4, {"5": 6}]}]')
+        obj = DottedCollection.factory(
+            [1, 2, {'a': 'b', 'c': [3, 4, {'5': 6}]}]
+        )
+        self.assertReprsEqual(obj.to_json(),
+                              '[1, 2, {"a": "b", "c": [3, 4, {"5": 6}]}]')
 
         obj = DottedCollection.factory({})
         self.assertReprsEqual(obj.to_json(), '{}')
 
-        obj = DottedCollection.factory({'a': 'b', 'c': [1, 2, {'d': [3, 4, [5]]}]})
-        self.assertReprsEqual(obj.to_json(), '{"a": "b", "c": [1, 2, {"d": [3, 4, [5]]}]}')
+        obj = DottedCollection.factory(
+            {'a': 'b', 'c': [1, 2, {'d': [3, 4, [5]]}]}
+        )
+        self.assertReprsEqual(obj.to_json(),
+                              '{"a": "b", "c": [1, 2, {"d": [3, 4, [5]]}]}')
         self.assertEqual(obj['c'].to_json(), '[1, 2, {"d": [3, 4, [5]]}]')
         self.assertEqual(obj['c'][2].to_json(), '{"d": [3, 4, [5]]}')
         self.assertEqual(obj['c'][2]['d'].to_json(), '[3, 4, [5]]')
         self.assertEqual(obj['c'][2]['d'][2].to_json(), '[5]')
 
-        with self.assertRaisesRegexp(AttributeError, "'int' object has no attribute 'to_json'"):
+        with self.assertRaisesRegexp(
+                AttributeError,
+                "'int' object has no attribute 'to_json'"):
             obj['c'][2]['d'][2][0].to_json()
 
     def test_dottedlist(self):
@@ -136,7 +151,9 @@ class DottedCollectionTests(unittest.TestCase):
         obj[1] = 1
 
         # Bad try
-        with self.assertRaisesRegexp(IndexError, 'list (assignment )?index out of range'):
+        with self.assertRaisesRegexp(
+                IndexError,
+                'list (assignment )?index out of range'):
             obj[3] = 3
 
         # Good!
@@ -145,7 +162,9 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertReprsEqual(repr(obj), '[0, 1, 2]')
 
         # Bad try in nested list
-        with self.assertRaisesRegexp(IndexError, 'list (assignment )?index out of range'):
+        with self.assertRaisesRegexp(
+                IndexError,
+                'list (assignment )?index out of range'):
             obj['3.1'] = 1
 
         # TODO(@carlosescri): Should it be '[0, 1, 2]'???
@@ -188,7 +207,9 @@ class DottedCollectionTests(unittest.TestCase):
 
         self.assertReprsEqual(repr(obj), '[1, 2, 3]')
 
-        with self.assertRaisesRegexp(IndexError, 'list (assignment )?index out of range'):
+        with self.assertRaisesRegexp(
+                IndexError,
+                'list (assignment )?index out of range'):
             del obj[3]
 
         python_obj = obj.to_python()
@@ -203,10 +224,14 @@ class DottedCollectionTests(unittest.TestCase):
 
         self.assertNotIsInstance(obj, dict)
 
-        with self.assertRaisesRegexp(KeyError, 'DottedDict keys must be str or unicode'):
+        with self.assertRaisesRegexp(
+                KeyError,
+                'DottedDict keys must be str or unicode'):
             obj[0] = 0
 
-        with self.assertRaisesRegexp(KeyError, 'DottedDict keys must be str or unicode'):
+        with self.assertRaisesRegexp(
+                KeyError,
+                'DottedDict keys must be str or unicode'):
             obj[1.0] = 0
 
         obj['0'] = 0
@@ -220,7 +245,8 @@ class DottedCollectionTests(unittest.TestCase):
 
         obj.update({'hello': {'world': {'wide': 'web'}}})
 
-        self.assertReprsEqual(repr(obj), "{'hello': {'world': {'wide': 'web'}}}")
+        self.assertReprsEqual(repr(obj),
+                              "{'hello': {'world': {'wide': 'web'}}}")
 
         self.assertIsInstance(obj['hello'], DottedDict)
         self.assertIsInstance(obj['hello.world'], DottedDict)
@@ -231,7 +257,10 @@ class DottedCollectionTests(unittest.TestCase):
 
         obj['hello.world'].update({'free': 'tour'})
 
-        self.assertReprsEqual(repr(obj), "{'hello': {'world': {'wide': 'web', 'free': 'tour'}}}")
+        self.assertReprsEqual(
+            repr(obj),
+            "{'hello': {'world': {'wide': 'web', 'free': 'tour'}}}"
+        )
 
         # Access via __getattr__ and __setattr__
 
@@ -244,16 +273,23 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertEqual(obj.hello.world.wide, 'tour')
         self.assertEqual(obj.hello.world.free, 'web')
 
-        self.assertReprsEqual(repr(obj), "{'hello': {'world': {'wide': 'tour', 'free': 'web'}}}")
+        self.assertReprsEqual(
+            repr(obj),
+            "{'hello': {'world': {'wide': 'tour', 'free': 'web'}}}"
+        )
 
         obj.hello.world.wide = 'web'
         obj.hello.world.free = 'tour'
 
-        self.assertReprsEqual(repr(obj), "{'hello': {'world': {'wide': 'web', 'free': 'tour'}}}")
+        self.assertReprsEqual(
+            repr(obj),
+            "{'hello': {'world': {'wide': 'web', 'free': 'tour'}}}"
+        )
 
         del obj['hello.world.free']
 
-        self.assertReprsEqual(repr(obj), "{'hello': {'world': {'wide': 'web'}}}")
+        self.assertReprsEqual(repr(obj),
+                              "{'hello': {'world': {'wide': 'web'}}}")
 
         del obj['hello']['world']['wide']
 
@@ -261,7 +297,8 @@ class DottedCollectionTests(unittest.TestCase):
 
         obj['hello']['world.wide'] = 'web'
 
-        self.assertReprsEqual(repr(obj), "{'hello': {'world': {'wide': 'web'}}}")
+        self.assertReprsEqual(repr(obj),
+                              "{'hello': {'world': {'wide': 'web'}}}")
 
         del obj['hello']['world.wide']
 
@@ -288,20 +325,31 @@ class DottedCollectionTests(unittest.TestCase):
     def test_all(self):
         """ Power Tests """
 
-        json_value = ('{"product": ['
-                      '{"label": "Categoría", "name":"categories","es_definition": {"terms": {"field": "categories_facet", "size":20}}},'
-                      '{"label": "Marca", "name":"brand","es_definition": {"terms": {"field": "brand_facet", "size":20}}},'
-                      '{"label": "Precio", "name":"price", "es_definition": {"range": {"ranges": [{"from": 0}], "field": "price"}}},'
-                      '{"label": "Color", "name":"color", "es_definition": {"terms": {"field": "color_facet", "size": 20}}}'
-                      ']}')
+        json_value = (
+            '{"product": ['
+            '{"label": "Categoría", "name":"categories", '
+            ' "es_definition": {"terms": {"field": "categories_facet", '
+            '                             "size":20}}},'
+            '{"label": "Marca", "name":"brand", '
+            ' "es_definition": {"terms": {"field": "brand_facet", "size":20}}},'
+            '{"label": "Precio", "name":"price", '
+            ' "es_definition": {"range": {"ranges": [{"from": 0}], '
+            '                             "field": "price"}}},'
+            '{"label": "Color", "name":"color", '
+            ' "es_definition": {"terms": {"field": "color_facet", "size": 20}}}'
+            ']}'
+        )
 
         facets = DottedCollection.load_json(json_value)
 
-        self.assertIsInstance(facets['product.0.es_definition.terms'], DottedDict)
+        self.assertIsInstance(facets['product.0.es_definition.terms'],
+                              DottedDict)
         self.assertEqual(facets['product.0.es_definition.terms.size'], 20)
 
-        self.assertIsInstance(facets['product.2.es_definition.range.ranges'], DottedList)
-        self.assertEqual(facets['product.2.es_definition.range.ranges.0.from'], 0)
+        self.assertIsInstance(facets['product.2.es_definition.range.ranges'],
+                              DottedList)
+        self.assertEqual(facets['product.2.es_definition.range.ranges.0.from'],
+                         0)
 
         # Some properties won't be accesible if they are Python reserved words.
         # This cannot be tested because it raises a SyntaxError
@@ -314,19 +362,25 @@ class DottedCollectionTests(unittest.TestCase):
         facets['product.3.label'] = "Mi Color"
         facets['product.3.es_definition.terms.size'] = 30
 
-        self.assertEqual(facets['product'][3]['es_definition']['terms']['size'], 30)
+        self.assertEqual(facets['product'][3]['es_definition']['terms']['size'],
+                         30)
         self.assertEqual(facets.product[3].es_definition.terms.size, 30)
 
-        json_value = ('{"product": {'
-                      '"url": "http://www.mainada.es/tienda_bebe/feeds/doofinder/feed.xml",'
-                      '"content_digest": "470550604637aac0d8ce899ade5b7ed5"'
-                      '}}')
+        json_value = (
+            '{"product": {'
+            ' "url": "http://www.mainada.es/feeds/doofinder/feed.xml",'
+            ' "content_digest": "470550604637aac0d8ce899ade5b7ed5"'
+            '}}'
+        )
 
         feed = DottedCollection.load_json(json_value)
 
         self.assertIsInstance(feed['product'], DottedDict)
         self.assertIsInstance(feed.product, DottedDict)
-        self.assertEqual(feed.product.url, 'http://www.mainada.es/tienda_bebe/feeds/doofinder/feed.xml')
+        self.assertEqual(
+            feed.product.url,
+            'http://www.mainada.es/feeds/doofinder/feed.xml'
+        )
 
         # Testing JSON correctness
 
