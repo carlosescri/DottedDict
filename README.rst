@@ -4,6 +4,8 @@ dotted
 .. image:: https://pypip.in/version/dotted/badge.svg?style=flat
     :target: https://pypi.python.org/pypi/dotted/
     :alt: Latest Version
+.. image:: https://travis-ci.org/carlosescri/DottedDict.svg?branch=master
+    :target: https://travis-ci.org/carlosescri/DottedDict
 
 A Python library that provides a method of accessing lists and dicts with a
 dotted path notation. It is useful to access a deep path inside a complex
