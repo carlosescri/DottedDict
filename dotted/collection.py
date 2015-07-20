@@ -2,11 +2,52 @@
 
 import collections
 import json
-import sys
+import re
 
 from abc import ABCMeta, abstractmethod
 
 from six import add_metaclass, string_types as basestring, iteritems
+
+
+SPLIT_REGEX = r"(?<!\\)(\.)"
+
+
+def is_dotted_key(key):
+    """Returns True if the key has any not-escaped dot inside"""
+    return len(re.findall(SPLIT_REGEX, key)) > 0
+
+
+def split_key(key, max_keys=0):
+    """Splits a key but allows dots in the key name if they're scaped properly.
+
+    Splitting this complex key:
+
+    complex_key = ".dont\.splitme.d\.o\. origen.splitme\.dontsplit.splitme."
+    split_key(complex_key)
+
+    results in:
+
+    ['', 'dont\.splitme', 'd\.o\. origen', 'splitme\.dontsplit', 'splitme', '']
+
+
+    Args:
+        key (basestring): The key to be splitted.
+        max_keys (int): The maximum number of keys to be extracted. 0 means no
+            limits.
+
+    Returns:
+        A list of keys
+    """
+    parts = [x for x in re.split(SPLIT_REGEX, key) if x != "."]
+    result = []
+    while len(parts) > 0:
+        if max_keys > 0 and len(result) == max_keys:
+            break
+        result.append(parts.pop(0))
+
+    if len(parts) > 0:
+        result.append(".".join(parts))
+    return result
 
 
 @add_metaclass(ABCMeta)
@@ -45,10 +86,10 @@ class DottedCollection(object):
         """
         if not isinstance(dotted_key, basestring):
             next_key = str(dotted_key)
-        elif '.' not in dotted_key:
+        elif not is_dotted_key(dotted_key):
             next_key = dotted_key
         else:
-            next_key, tmp = dotted_key.split('.', 1)
+            next_key, tmp = split_key(dotted_key, 1)
 
         return DottedCollection.factory([] if next_key.isdigit() else {})
 
@@ -115,22 +156,22 @@ class DottedList(DottedCollection, collections.MutableSequence):
                 or (isinstance(index, basestring) and index.isdigit()):
             return self.store[int(index)]
 
-        elif isinstance(index, basestring) and '.' in index:
-            # index is a dotted path
-            my_index, alt_index = index.split('.', 1)
+        elif isinstance(index, basestring) and is_dotted_key(index):
+            my_index, alt_index = split_key(index, 1)
             target = self.store[int(my_index)]
 
             # required by the dotted path
             if not isinstance(target, DottedCollection):
-                raise IndexError('cannot get "%s" in "%s" (%s)' % (
-                    alt_index, my_index, repr(target)))
+                raise IndexError('cannot get "{0}" in "{1}" ({2})'.format(
+                    alt_index,
+                    my_index,
+                    repr(target)
+                ))
 
             return target[alt_index]
 
         else:
             raise IndexError('cannot get %s in %s' % (index, repr(self.store)))
-
-
 
     def __setitem__(self, index, value):
         if isinstance(index, int) \
@@ -143,9 +184,8 @@ class DottedList(DottedCollection, collections.MutableSequence):
             else:
                 self.store[int(index)] = DottedCollection.factory(value)
 
-        elif isinstance(index, basestring) and '.' in index:
-            # index is a dotted path
-            my_index, alt_index = index.split('.', 1)
+        elif isinstance(index, basestring) and is_dotted_key(index):
+            my_index, alt_index = split_key(index, 1)
 
             # (***)
             if int(my_index) not in self.store \
@@ -168,9 +208,8 @@ class DottedList(DottedCollection, collections.MutableSequence):
                 or (isinstance(index, basestring) and index.isdigit()):
             del self.store[int(index)]
 
-        elif isinstance(index, basestring) and '.' in index:
-            # index is a dotted path
-            my_index, alt_index = index.split('.', 1)
+        elif isinstance(index, basestring) and is_dotted_key(index):
+            my_index, alt_index = split_key(index, 1)
             target = self.store[int(my_index)]
 
             # required by the dotted path
@@ -211,17 +250,19 @@ class DottedDict(DottedCollection, collections.MutableMapping):
     def __getitem__(self, k):
         key = self.__keytransform__(k)
 
-        if not isinstance(k, basestring) or '.' not in key:
+        if not isinstance(k, basestring) or not is_dotted_key(key):
             return self.store[key]
 
-        # key is a dotted path
-        my_key, alt_key = key.split('.', 1)
+        my_key, alt_key = split_key(key, 1)
         target = self.store[my_key]
 
         # required by the dotted path
         if not isinstance(target, DottedCollection):
-            raise KeyError('cannot get "%s" in "%s" (%s)' % (
-                alt_index, my_index, repr(target)))
+            raise KeyError('cannot get "{0}" in "{1}" ({2})'.format(
+                alt_key,
+                my_key,
+                repr(target)
+            ))
 
         return target[alt_key]
 
@@ -230,10 +271,10 @@ class DottedDict(DottedCollection, collections.MutableMapping):
 
         if not isinstance(k, basestring):
             raise KeyError('DottedDict keys must be str or unicode')
-        elif '.' not in key:
+        elif not is_dotted_key(key):
             self.store[key] = DottedCollection.factory(value)
         else:
-            my_key, alt_key = key.split('.', 1)
+            my_key, alt_key = split_key(key, 1)
 
             if my_key not in self.store:
                 self.store[my_key] = DottedCollection._factory_by_index(alt_key)
@@ -243,16 +284,19 @@ class DottedDict(DottedCollection, collections.MutableMapping):
     def __delitem__(self, k):
         key = self.__keytransform__(k)
 
-        if not isinstance(k, basestring) or '.' not in key:
+        if not isinstance(k, basestring) or not is_dotted_key(key):
             del self.store[key]
 
         else:
-            my_key, alt_key = key.split('.', 1)
+            my_key, alt_key = split_key(key, 1)
             target = self.store[my_key]
 
             if not isinstance(target, DottedCollection):
-                raise KeyError('cannot delete "%s" in "%s" (%s)' % (
-                    alt_index, my_index, repr(target)))
+                raise KeyError('cannot delete "{0}" in "{1}" ({2})'.format(
+                    alt_key,
+                    my_key,
+                    repr(target)
+                ))
 
             del target[alt_key]
 
@@ -287,10 +331,10 @@ class DottedDict(DottedCollection, collections.MutableMapping):
     def __contains__(self, k):
         key = self.__keytransform__(k)
 
-        if not isinstance(k, basestring) or '.' not in key:
+        if not isinstance(k, basestring) or not is_dotted_key(key):
             return self.store.__contains__(key)
 
-        my_key, alt_key = key.split('.', 1)
+        my_key, alt_key = split_key(key, 1)
         target = self.store[my_key]
 
         if not isinstance(target, DottedCollection):

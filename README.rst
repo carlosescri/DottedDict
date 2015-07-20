@@ -126,6 +126,18 @@ Example #5: Shortcuts
     obj = dot({'hello': 'world'})
     obj = dot_json('{"hello": "world"}')
 
+Example #6: Keys with dots inside!
+----------------------------------
+
+Well, you can actually use escaped keys, but it's better to avoid them:
+
+.. code-block:: python
+
+    from dotted.utils import dot, dot_json
+    obj = dot({"hello\.world": "Hello!"})
+    obj = dot_json('{"hello\\\\.world": "Hello!"}')
+    value = obj["hello\.world"]  # Hello!
+
 That's all!
 
 Tests

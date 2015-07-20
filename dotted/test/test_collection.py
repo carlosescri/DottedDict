@@ -136,7 +136,7 @@ class DottedCollectionTests(unittest.TestCase):
             obj['c'][2]['d'][2][0].to_json()
 
     def test_dottedlist(self):
-        """ DottedList Tests """
+        """DottedList Tests"""
         obj = DottedList()
 
         self.assertNotIsInstance(obj, list)
@@ -219,7 +219,7 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertNotIsInstance(obj, list)
 
     def test_dotteddict(self):
-        """ DottedDict Tests """
+        """DottedDict Tests"""
         obj = DottedDict()
 
         self.assertNotIsInstance(obj, dict)
@@ -322,8 +322,32 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertIsInstance(python_obj, dict)
         self.assertNotIsInstance(obj, dict)
 
+    def test_escaped_key(self):
+        """Test keys that contain dots that are not separators"""
+        json_value = '{"facets": {' \
+                     '  "color": ["red", "white"], ' \
+                     '  "d\\\\.o\\\\. origen": [' \
+                     '    "rioja", ' \
+                     '    "ribera del duero", ' \
+                     '    "d.o. bierzo"' \
+                     '  ]' \
+                     '}}'
+        data = DottedCollection.load_json(json_value)
+        self.assertIsInstance(data, DottedDict)
+        self.assertEqual(repr(data["facets"]["d\.o\. origen"]),
+                         repr([u"rioja", u"ribera del duero", u"d.o. bierzo"]))
+        self.assertEqual(repr(data["facets.d\.o\. origen"]),
+                         repr([u"rioja", u"ribera del duero", u"d.o. bierzo"]))
+        self.assertEqual(data["facets.d\.o\. origen.0"], u"rioja")
+        self.assertEqual(data["facets.d\.o\. origen.2"], u"d.o. bierzo")
+        data["do\.not\.split"] = True
+        self.assertTrue(data["do\.not\.split"])
+        data["split.this\.not"] = False
+        self.assertEqual(data["split.this\.not"], False)
+        self.assertEqual(data["split"]["this\.not"], False)
+
     def test_all(self):
-        """ Power Tests """
+        """Power Tests"""
 
         json_value = (
             '{"product": ['
