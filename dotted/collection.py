@@ -152,6 +152,9 @@ class DottedList(DottedCollection, collections.MutableSequence):
         )
 
     def __getitem__(self, index):
+        if isinstance(index, slice):
+            return self.store[index]
+
         if isinstance(index, int) \
                 or (isinstance(index, basestring) and index.isdigit()):
             return self.store[int(index)]
