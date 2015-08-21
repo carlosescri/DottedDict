@@ -155,5 +155,7 @@ Special Thanks
 ==============
 
 - **Marc Abramowitz** (`@msabramo`_)
+- **Ryan Witt** (`@ryanwitt`_)
 
 .. _@msabramo: https://github.com/msabramo
+.. _@ryanwitt: https://github.com/ryanwitt
