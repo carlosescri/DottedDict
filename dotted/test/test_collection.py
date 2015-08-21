@@ -207,6 +207,9 @@ class DottedCollectionTests(unittest.TestCase):
 
         self.assertReprsEqual(repr(obj), '[1, 2, 3]')
 
+        # Test slicing
+        self.assertReprsEqual(repr(obj[:2]), '[1, 2]')
+
         with self.assertRaisesRegexp(
                 IndexError,
                 'list (assignment )?index out of range'):
