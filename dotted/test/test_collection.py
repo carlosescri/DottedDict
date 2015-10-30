@@ -434,7 +434,6 @@ class DottedCollectionTests(unittest.TestCase):
             DottedDict({"bad.key": "value"})
         with self.assertRaises(ValueError):
             DottedList([{}, {"bad.key": "value"}])
-        DottedCollection.factory({""})
 
 
 if __name__ == '__main__':
