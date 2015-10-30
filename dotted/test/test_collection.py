@@ -72,11 +72,6 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertIsInstance(obj['test'][2], DottedDict)
         self.assertIsInstance(obj['hello'], text_type)
 
-        json_value = "Hi everybody!"
-        obj = DottedCollection.load_json(json_value)
-        self.assertReprsEqual(repr(obj), "'Hi everybody!'")
-        self.assertIsInstance(obj, string_types)
-
         # DottedCollection._factory_by_index
 
         obj = DottedCollection._factory_by_index(1)
@@ -434,6 +429,10 @@ class DottedCollectionTests(unittest.TestCase):
             DottedDict({"bad.key": "value"})
         with self.assertRaises(ValueError):
             DottedList([{}, {"bad.key": "value"}])
+        with self.assertRaises(ValueError):
+            DottedCollection.load_json('{"key": "value"')
+        with self.assertRaises(ValueError):
+            DottedCollection.load_json('value')
 
 
 if __name__ == '__main__':

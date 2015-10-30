@@ -70,12 +70,7 @@ class DottedCollection(object):
     @classmethod
     def load_json(cls, json_value):
         """Returns a DottedCollection from a JSON string"""
-        try:
-            value = json.loads(json_value)
-        except ValueError:
-            value = json_value
-
-        return cls.factory(value)
+        return cls.factory(json.loads(json_value))
 
     @classmethod
     def _factory_by_index(cls, dotted_key):
@@ -116,6 +111,7 @@ class DottedCollection(object):
                 pass
 
     def _validate_initial(self, initial):
+        """Validates data so no unescaped dotted key is present."""
         if isinstance(initial, list):
             for item in initial:
                 self._validate_initial(item)
