@@ -120,7 +120,7 @@ class DottedCollection(object):
             for item in initial:
                 self._validate_initial(item)
         elif isinstance(initial, dict):
-            for key, item in initial.iteritems():
+            for key, item in iteritems(initial):
                 if is_dotted_key(key):
                     raise ValueError("{0} is not a valid key inside a "
                                      "DottedCollection!".format(key))
