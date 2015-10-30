@@ -100,6 +100,8 @@ class DottedCollection(object):
         if not isinstance(initial, list) and not isinstance(initial, dict):
             raise ValueError('initial value must be a list or a dict')
 
+        self._validate_initial(initial)
+
         self.store = initial
 
         if isinstance(self.store, list):
@@ -112,6 +114,17 @@ class DottedCollection(object):
                 self.store[key] = DottedCollection.factory(value)
             except ValueError:
                 pass
+
+    def _validate_initial(self, initial):
+        if isinstance(initial, list):
+            for item in initial:
+                self._validate_initial(item)
+        elif isinstance(initial, dict):
+            for key, item in initial.iteritems():
+                if is_dotted_key(key):
+                    raise ValueError("{0} is not a valid key inside a "
+                                     "DottedCollection!".format(key))
+                self._validate_initial(item)
 
     def __len__(self):
         return len(self.store)

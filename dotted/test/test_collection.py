@@ -425,6 +425,17 @@ class DottedCollectionTests(unittest.TestCase):
         self.assertIsInstance(python_object, dict)
         self.assertIsInstance(python_object['product'], dict)
 
+    def test_bad_json(self):
+        with self.assertRaises(ValueError):
+            DottedCollection.factory({"bad.key": "value"})
+        with self.assertRaises(ValueError):
+            DottedCollection.load_json('{"bad.key": "value"}')
+        with self.assertRaises(ValueError):
+            DottedDict({"bad.key": "value"})
+        with self.assertRaises(ValueError):
+            DottedList([{}, {"bad.key": "value"}])
+        DottedCollection.factory({""})
+
 
 if __name__ == '__main__':
     unittest.main()
