@@ -32,6 +32,8 @@ Quick & Dirty:
 so you can iterate them as usual. Both type of objects support access via a
 dotted path key.
 
+Convert back to a regular Python dict or json with ``.to_python`` and ``.to_json``.
+
 Examples
 ========
 
