@@ -1,7 +1,7 @@
 dotted
 ======
 
-.. image:: https://pypip.in/version/dotted/badge.svg?style=flat
+.. image:: https://img.shields.io/pypi/v/dotted.svg?style=flat
     :target: https://pypi.python.org/pypi/dotted/
     :alt: Latest Version
 .. image:: https://travis-ci.org/carlosescri/DottedDict.svg?branch=master
