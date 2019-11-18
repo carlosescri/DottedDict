@@ -18,7 +18,7 @@ def is_dotted_key(key):
 
 
 def split_key(key, max_keys=0):
-    """Splits a key but allows dots in the key name if they're scaped properly.
+    """Splits a key but allows dots in the key name if they're escaped properly.
 
     Splitting this complex key:
 
