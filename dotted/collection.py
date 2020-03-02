@@ -277,11 +277,14 @@ class DottedDict(DottedCollection, collections.MutableMapping):
                 raise KeyOrAttributeError(e)
 
         my_key, alt_key = split_key(key, 1)
-        target = self.store[my_key]
+        try:
+            target = self.store[my_key]
+        except KeyError as e:
+            raise KeyOrAttributeError(e)
 
         # required by the dotted path
         if not isinstance(target, DottedCollection):
-            raise KeyError('cannot get "{0}" in "{1}" ({2})'.format(
+            raise KeyOrAttributeError('cannot get "{0}" in "{1}" ({2})'.format(
                 alt_key,
                 my_key,
                 repr(target)
