@@ -382,4 +382,4 @@ class DottedJSONEncoder(json.JSONEncoder):
         if isinstance(obj, DottedCollection):
             return obj.store
         else:
-            return json.JSONEncoder.default(obj)
+            return json.JSONEncoder.default(self, obj)
