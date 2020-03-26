@@ -50,6 +50,14 @@ def split_key(key, max_keys=0):
     return result
 
 
+class KeyOrAttributeError(KeyError, AttributeError):
+    """
+    Exception that should be raised when it's ambiguous whether
+    a key or an attribute was accessed
+    """
+    pass
+
+
 @add_metaclass(ABCMeta)
 class DottedCollection(object):
     """Abstract Base Class for DottedDict and DottedDict"""
@@ -263,14 +271,20 @@ class DottedDict(DottedCollection, collections.MutableMapping):
         key = self.__keytransform__(k)
 
         if not isinstance(k, basestring) or not is_dotted_key(key):
-            return self.store[key]
+            try: #  since __getattr__ is the same as __getitem__, it can be 
+                return self.store[key] #  that an attribute is requested here
+            except KeyError as e: #  for instance, if hasattr is called
+                raise KeyOrAttributeError(e)
 
         my_key, alt_key = split_key(key, 1)
-        target = self.store[my_key]
+        try:
+            target = self.store[my_key]
+        except KeyError as e:
+            raise KeyOrAttributeError(e)
 
         # required by the dotted path
         if not isinstance(target, DottedCollection):
-            raise KeyError('cannot get "{0}" in "{1}" ({2})'.format(
+            raise KeyOrAttributeError('cannot get "{0}" in "{1}" ({2})'.format(
                 alt_key,
                 my_key,
                 repr(target)
@@ -368,4 +382,4 @@ class DottedJSONEncoder(json.JSONEncoder):
         if isinstance(obj, DottedCollection):
             return obj.store
         else:
-            return json.JSONEncoder.default(obj)
+            return json.JSONEncoder.default(self, obj)
