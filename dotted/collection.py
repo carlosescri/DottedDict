@@ -347,6 +347,9 @@ class DottedDict(DottedCollection, collections.MutableMapping):
             return self.store.__contains__(key)
 
         my_key, alt_key = split_key(key, 1)
+        # check if the key exists at this level first
+        if not self.store.__contains__(my_key): return False
+        # then get a new target
         target = self.store[my_key]
 
         if not isinstance(target, DottedCollection):
