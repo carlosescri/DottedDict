@@ -151,7 +151,7 @@ class DottedCollection(object):
         pass
 
 
-class DottedList(DottedCollection, collections.MutableSequence):
+class DottedList(DottedCollection, collections.abc.MutableSequence):
     """A list with support for the dotted path syntax"""
 
     def __init__(self, initial=None):
@@ -251,7 +251,7 @@ class DottedList(DottedCollection, collections.MutableSequence):
         self.store.insert(index, value)
 
 
-class DottedDict(DottedCollection, collections.MutableMapping):
+class DottedDict(DottedCollection, collections.abc.MutableMapping):
     """A dict with support for the dotted path syntax"""
     def __init__(self, initial=None):
         DottedCollection.__init__(
