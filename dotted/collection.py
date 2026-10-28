@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import collections
 import json
 import re
 
 from abc import ABCMeta, abstractmethod
 
 from six import add_metaclass, string_types as basestring, iteritems
+
+try:
+    from collections.abc import MutableMapping, MutableSequence
+except ImportError:  # Python 2
+    from collections import MutableMapping, MutableSequence
 
 
 SPLIT_REGEX = r"(?<!\\)(\.)"
@@ -18,7 +22,7 @@ def is_dotted_key(key):
 
 
 def split_key(key, max_keys=0):
-    """Splits a key but allows dots in the key name if they're escaped properly.
+    r"""Splits a key but allows dots in the key name if they're escaped properly.
 
     Splitting this complex key:
 
@@ -151,7 +155,7 @@ class DottedCollection(object):
         pass
 
 
-class DottedList(DottedCollection, collections.MutableSequence):
+class DottedList(DottedCollection, MutableSequence):
     """A list with support for the dotted path syntax"""
 
     def __init__(self, initial=None):
@@ -251,7 +255,7 @@ class DottedList(DottedCollection, collections.MutableSequence):
         self.store.insert(index, value)
 
 
-class DottedDict(DottedCollection, collections.MutableMapping):
+class DottedDict(DottedCollection, MutableMapping):
     """A dict with support for the dotted path syntax"""
     def __init__(self, initial=None):
         DottedCollection.__init__(
